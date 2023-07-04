@@ -1,0 +1,101 @@
+오후 2:08 2023-07-04
+#은 여기서 prompt을 의미
+
+0. 작업 디렉토리
+# pwd
+# /root
+
+1. 의존 라이브러리 설치(mariadb에 가져온것)
+# yum install -y gcc
+# yum install -y gcc-c++
+# yum install -y libtermcap-devel 이게뭔데
+# yum install -y gdbm-devel
+# yum install -y zlib*
+# yum install -y libxml*
+# yum install -y freetype*
+# yum install -y libpng* 
+# yum install -y flex
+# yum install -y gmp
+# yum install -y ncurses-devel
+# yum install -y cmake.x86_64
+# yum install -y libaio
+
+1-1. 소스 다운로드
+$ wget --no-check-certificate https://ftp.gnu.org/pub/gnu/libiconv/libiconv-1.17.tar.gz
+
+1-1-1. 압출 풀기
+# tar xfvz libiconv-1.17.tar.gz
+
+1-2 빌드 & 설치
+# cd lib~1.17
+$ ./configure --prefix=/usr/local		빌드하고 설치할 수 있는 환경인지 확인
+$ make					
+$ make install
+설치끝
+
+iconv 소스 컴파일 설치를 한다.  utf파일 유명한 라이브러리
+
+
+
+
+2. 소스 다운로드(--no-check-certificate가 추가됨)
+# wget --no-check-certificate https://downloads.mariadb.org/interstitial/mariadb-10.1.48/source/mariadb-10.1.48.tar.gz 
+실행파일을 설치할 수 도 있지않나?
+
+3. 압축 풀기
+# tar xvfz mariadb-10.1.48.tar.gz
+
+4. 소스 이동
+# cd mariadb-10.1.48
+
+5. 빌드 환경 설정 
+# cmake -DCMAKE_INSTALL_PREFIX=/usr/local/bootcamp/mariadb -DMYSQL_USER=mysql -DMYSQL_TCP_PORT=3306 -DMYSQL_DATADIR=/usr/local/bootcamp/mariadb/data -DMYSQL_UNIX_ADDR=/usr/local/bootcamp/mariadb/tmp/mariadb.sock -DINSTALL_SYSCONFDIR=/usr/local/bootcamp/mariadb/etc -DINSTALL_SYSCONF2DIR=/usr/local/bootcamp/mariadb/etc/my.cnf.d -DDEFAULT_CHARSET=utf8 -DDEFAULT_COLLATION=utf8_general_ci -DWITH_EXTRA_CHARSETS=all -DWITH_ARIA_STORAGE_ENGINE=1 -DWITH_XTRADB_STORAGE_ENGINE=1 -DWITH_ARCHIVE_STORAGE_ENGINE=1 -DWITH_INNOBASE_STORAGE_ENGINE=1 -DWITH_PARTITION_STORAGE_ENGINE=1 -DWITH_BLACKHOLE_STORAGE_ENGINE=1 -DWITH_FEDERATEDX_STORAGE_ENGINE=1 -DWITH_PERFSCHEMA_STORAGE_ENGINE=1 -DWITH_READLINE=1 -DWITH_SSL=bundled -DWITH_ZLIB=system
+애는? configue / cmake? c빌드여서
+포트는 3306
+해시함수 졸라많네
+
+6. 빌드
+# make 뭐이리 길어,,,,,,,,,,,,,3분,,,,,,,,,,,,,,4분,,,,,,, rdbms하나 빌드하는 꼴이라 오래걸린닥하네
+
+7. 설치
+# make install
+# cd     (작업은 /root)
+# pwd
+/root
+
+8. 계정 생성
+# groupadd mysql
+# useradd -M -g mysql mysql         -m home 디렉터리를 만들지 x , mysql을 실행시키는 로그인
+
+9. 인스톨 디렉토리 /usr/local/bootcamp/mariadb 소유자 변경	소유자도 mysql , 그룹도 mysql
+# chown -R mysql:mysql /usr/local/bootcamp/mariadb		
+
+10. 설정파일 위치 변경 (/etc는 보통 설정파일넣는곳)
+cp -R /usr/local/bootcamp/mariadb/etc/my.cnf.d /etc
+
+11. 기본(관리) 데이터베이스(mysql) 생성
+# /usr/local/bootcamp/mariadb/scripts/mysql_install_db --user=mysql --basedir=/usr/local/bootcamp/mariadb --defaults-file=/usr/local/bootcamp/mariadb/etc/my.cnf --datadir=/usr/local/bootcamp/mariadb/data
+
+12. 서버 구동 (데몬-클라이언트가 연결할때까지 계속) 지금도 실행중
+# /usr/local/bootcamp/mariadb/bin/mysqld_safe & (&은 background에서)
+근데 왜실행시켰어요?
+
+13. root 패스워드 설정
+# /usr/local/bootcamp/mariadb/bin/mysqladmin -u root password	(나는 rladydaks!12) mysql, linux계정이 다르지만 기본적으로 id: root,
+
+14. 데이터베이스 접속 테스트
+# /usr/local/bootcamp/mariadb/bin/mysql -u root -p		(진짜 실행)  
+MariaDB [(none)]>
+
+15. path 설정(/etc/profile)
+# mysql
+export PATH=$PATH:/usr/local/bootcamp/mariadb/bin
+
+16. 서비스(데몬, Daemon) 등록/시작/중지			maria든 하둡이든 다 같은방식
+# cp /usr/local/bootcamp/mariadb/support-files/mysql.server /etc/init.d/mariadb
+		# chkconfig mariadb on (centos7이상: systemctl enable mariadb) 
+# systemctl start mariadb
+
+~stop ~도 
+
+끝-----------

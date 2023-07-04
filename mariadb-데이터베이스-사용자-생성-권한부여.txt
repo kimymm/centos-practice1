@@ -1,0 +1,43 @@
+# mysql -p  (DBA 권한으로 접속)
+
+1. webdb database 생성
+MariaDB [none]> create database webdb;
+
+2. linux 서버 local 접속 계정 webdb 생성
+1) user 생성
+MariaDB [none]> create user 'webdb'@'localhost' identified by 'webdb'; 칼럼에 정보 넣는 identified는 pw, 아이디 webdb 비번 webdb
+
+2) 권한 부여
+MariaDB [none]> grant all privileges on webdb.* to 'webdb'@'localhost';  모든 권한은 webdb라는 데이터 모든 테이블 권한. - > to 'webdb', localhost에 접근하는
+
+3) 새 변경사항 적용
+MariaDB [none]> flush privileges;
+
+4) 테스트
+# mysql -u webdb -D webdb -p
+
+=====================================================================
+
+
+3. 특정 IP(windows 192.168.80.31)의 접속 계정 webdb 생성 
+1) user 생성
+MariaDB [none]> create user 'webdb'@'192.168.80.31' identified by 'webdb';  //
+
+2) 권한 부여
+MariaDB [none]> grant all privileges on webdb.* to 'webdb'@'192.168.80.31'; // 스타벅스는 공용 아이피, %/ 모든 아이피에서 다 접근이라 192.168.%
+
+3) 새 변경사항 적용
+MariaDB [none]> flush privileges;
+
+4) Windows의 Workbench 에서 연결 테스트 
+
+
+mysql -u webdb -D webdb -P
+webdb
+
+
+
+
+
+
+
