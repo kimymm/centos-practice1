@@ -5,10 +5,11 @@ MariaDB [none]> create database webdb;
 
 2. linux 서버 local 접속 계정 webdb 생성
 1) user 생성
-MariaDB [none]> create user 'webdb'@'localhost' identified by 'webdb'; 칼럼에 정보 넣는 identified는 pw, 아이디 webdb 비번 webdb
+MariaDB [none]> create user 'webdb'@'localhost' identified by 'webdb'; 칼럼에 정보 넣는 identified는 pw, 아이디 webdb 비번 webdb          //인증application security (2) 중 하나 : 인증, 권한
 
 2) 권한 부여
-MariaDB [none]> grant all privileges on webdb.* to 'webdb'@'localhost';  모든 권한은 webdb라는 데이터 모든 테이블 권한. - > to 'webdb', localhost에 접근하는
+MariaDB [none]> grant all privileges on webdb.* to 'webdb'@'localhost';  모든 권한은 webdb라는 데이터 모든 테이블 권한. - > to 'webdb', localhost에 접근하는 //여러부분에서 권한 부여하면 좋은것이 아님, 그래서 특정ip로 제약을 하는것., 지금은 편의상 다 열어놓은상황.
+만일 카공하면 다시 사용자 만들수도 있기에, ip대역으로 하자니 이상한ip로 시작하니까, 
 
 3) 새 변경사항 적용
 MariaDB [none]> flush privileges;
