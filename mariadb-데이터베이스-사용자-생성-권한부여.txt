@@ -31,7 +31,7 @@ MariaDB [none]> grant all privileges on webdb.* to 'webdb'@'192.168.80.31'; // �
 MariaDB [none]> flush privileges;
 
 4) Windows의 Workbench 에서 연결 테스트 
-
+************방화벽 꺼야함********************
 
 mysql -u webdb -D webdb -P
 webdb
